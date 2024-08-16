@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Pedidos</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 400px;
+            text-align: center;
+        }
+        .logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group textarea {
+            resize: vertical;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+        }
+        .btn {
+            background-color: red;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 48%;
+        }
+        .btn:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="Parrilla_Logo.png" alt="Logo" class="logo">
+        <h1>Gestión de Pedidos</h1>
+        <div class="form-group">
+            <label for="producto">Producto</label>
+            <select id="producto" class="js-example-basic-single">
+                <optgroup label="Entradas">
+                    <option value="Chorizo" data-precio="5">Chorizo - 14000COP</option>
+                    <option value="Morcilla" data-precio="6">Morcilla - 14000COP</option>
+                </optgroup>
+                <optgroup label="Adicionales">
+                    <option value="Patacon" data-precio="3">Patacon - 3000COP</option>
+                    <option value="Papa cocida" data-precio="2">Papa cocida - 3000COP</option>
+                    <option value="Papa a la francesa" data-precio="4">Papa a la francesa - 4500COP</option>
+                </optgroup>
+                <optgroup label="Pinchos">
+                    <option value="Carne" data-precio="7">Carne - 23000COP</option>
+                    <option value="Pollo" data-precio="6">Pollo - 23000COP</option>
+                    <option value="Mixto" data-precio="8">Mixto - 23000COP</option>
+                </optgroup>
+                <optgroup label="Bebidas">
+                    <option value="Agua" data-precio="1">Agua - 3500COP</option>
+                    <option value="Soda 400ml" data-precio="2">Soda 400ml - 4000COP</option>
+                    <option value="Mr.tea" data-precio="3">Mr.tea - $3</option>
+                    <option value="Postobón Pet 400ml" data-precio="2.5">Postobón Pet 400ml - 4000COP</option>
+                    <option value="Posto" data-precio="1.5">Posto - 4000COP</option>
+                </optgroup>
+                <optgroup label="Parrillas">
+                    <option value="Churrasco 300g" data-precio="10">Churrasco 300g - 42000COP</option>
+                    <option value="Baby beef 300g" data-precio="12">Baby beef 300g - 44000COp</option>
+                    <option value="Pechuga 300g" data-precio="9">Pechuga 300g - 28000COP</option>
+                    <option value="Punta de anca 300g" data-precio="11">Punta de anca 300g - 43000COP</option>
+                    <option value="Lomo de cerdo 300g" data-precio="8">Lomo de cerdo 300g - 30000COP</option>
+                </optgroup>
+                <optgroup label="Mixta Personal">
+                    <option value="Mixta Personal" data-precio="15">Mixta Personal - 42000COP</option>
+                </optgroup>
+                <optgroup label="Picadas">
+                    <option value="Personal" data-precio="20">Personal - 45000COP</option>
+                    <option value="Familiar" data-precio="35">Familiar - 90000COP</option>
+                </optgroup>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="notas">Notas</label>
+            <textarea id="notas" placeholder="Notas adicionales"></textarea>
+        </div>
+        <div class="btn-group">
+            <button class="btn" onclick="guardarPedido()">Guardar Pedido</button>
+            <button class="btn" onclick="cuentaAbierta()">Cuenta Abierta</button>
+       
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.js-example-basic-single').select2();
+        });
+
+        function guardarPedido() {
+            const producto = document.getElementById('producto').value;
+            const precio = document.getElementById('producto').selectedOptions[0].dataset.precio;
+            const notas = document.getElementById('notas').value;
+
+            const pedido = {
+                producto,
+                precio,
+                notas,
+                fecha: new Date().toLocaleString()
+            };
+
+            const facturaVentana = window.open('', 'Factura', 'width=400,height=600');
+            facturaVentana.document.write(`
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        padding: 20px;
+                    }
+                    h1 {
+                        font-size: 18px;
+                        margin-bottom: 20px;
+                    }
+                    p {
+                        margin: 5px 0;
+                    }
+                    .factura {
+                        border: 1px solid #ccc;
+                        padding: 10px;
+                        border-radius: 5px;
+                    }
+                    .btn-imprimir {
+                        background-color: red;
+                        color: #fff;
+                        border: none;
+                        padding: 10px 15px;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        margin-top: 10px;
+                    }
+                    .btn-imprimir:hover {
+                        background-color: darkred;
+                    }
+                </style>
+                <div class="factura">
+                    <h1>Factura</h1>
+                    <p><strong>Producto:</strong> ${pedido.producto}</p>
+                    <p><strong>Precio:</strong> ${pedido.precio}</p>
+                    <p><strong>Notas:</strong> ${pedido.notas}</p>
+                    <p><strong>Fecha:</strong> ${pedido.fecha}</p>
+                    <button class="btn-imprimir" onclick="window.print()">Imprimir Factura</button>
+                </div>
+            `);
+        }
+
+        function cuentaAbierta() {
+            const producto = document.getElementById('producto').value;
+            const precio = document.getElementById('producto').selectedOptions[0].dataset.precio;
+            const notas = document.getElementById('notas').value;
+
+            const pedido = {
+                producto,
+                precio,
+                notas,
+                fecha: new Date().toLocaleString()
+            };
+
+            let cuentasAbiertas = JSON.parse(localStorage.getItem('cuentasAbiertas')) || [];
+            cuentasAbiertas.push(pedido);
+            localStorage.setItem('cuentasAbiertas', JSON.stringify(cuentasAbiertas));
+
+            alert('Pedido guardado como cuenta abierta.');
+        }
+    </script>
+</body>
+</html>

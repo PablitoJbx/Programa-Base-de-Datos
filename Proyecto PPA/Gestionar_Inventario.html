@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Inventario</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(-50px);
+            animation: slideIn 0.5s forwards;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .container h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .container form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container input, .container select, .container button {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px;
+            max-width: calc(100% - 20px);
+            box-sizing: border-box;
+        }
+        .container button {
+            background-color: #FF0000; /* Rojo */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .container button:hover {
+            background-color: #CC0000; /* Rojo más oscuro */
+        }
+        .message {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #28a745;
+            color: white;
+        }
+        .error {
+            background-color: #dc3545;
+            color: white;
+        }
+        .logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="Parrilla_Logo.png" alt="Logo" class="logo">
+        <h1>Gestionar Inventario</h1>
+        <form id="inventoryForm" action="gestionar_inventario.php" method="POST">
+            <input type="text" name="ingredient_name" id="ingredient_name" placeholder="Nombre del ingrediente" required>
+            <input type="number" step="0.01" name="quantity" id="quantity" placeholder="Cantidad" required>
+            <select name="unit" id="unit" required>
+                <option value="grams">Gramos</option>
+                <option value="kg">Kilos</option>
+                <option value="ml">Mililitros</option>
+                <option value="liters">Litros</option>
+            </select>
+            <input type="text" name="added_by" id="added_by" placeholder="Nombre de quien agrega" required>
+            <button type="button" onclick="submitForm()">Agregar Ingrediente</button>
+        </form>
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        function submitForm() {
+            var formData = new FormData(document.getElementById('inventoryForm'));
+
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        showMessage('success', 'El ingrediente se agregó correctamente.');
+                    } else {
+                        showMessage('error', 'Hubo un error al agregar el ingrediente. Por favor, inténtalo de nuevo más tarde.');
+                    }
+                }
+            };
+            xhr.open('POST', 'gestionar_inventario.php', true);
+            xhr.send(formData);
+        }
+
+        function showMessage(type, message) {
+            var messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.className = 'message ' + type;
+            messageDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Plato</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .form-container {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(-50px);
+            animation: slideIn 0.5s forwards;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .form-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .form-container input[type="text"],
+        .form-container textarea,
+        .form-container input[type="number"] {
+            width: 300px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-container button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #FF0000; /* Rojo */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .form-container button:hover {
+            background-color: #CC0000; /* Rojo más oscuro */
+        }
+        .logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <img src="Parrilla_Logo.png" alt="Logo" class="logo">
+        <h2>Agregar Nuevo Plato</h2>
+        <form id="agregar-plato-form">
+            <input type="text" name="nombre" placeholder="Nombre del Plato" required>
+            <textarea name="descripcion" placeholder="Descripción" rows="4" required></textarea>
+            <input type="number" name="precio" placeholder="Precio" step="0.01" required>
+            <button type="submit">Agregar Plato</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('agregar-plato-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            fetch('procesar_plato.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = 'plato_agregado.html';
+                } else {
+                    alert('Error al agregar el plato.');
+                }
+            })
+            .catch(error => {
+                console.error('Error al agregar plato:', error);
+                alert('Error al agregar el plato. Por favor, intenta de nuevo más tarde.');
+            });
+        });
+    </script>
+</body>
+</html>
